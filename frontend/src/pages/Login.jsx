@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import { api } from "../services/api"; // Axios instance with baseURL
+import { api } from "../services/api";
+import LiquidEther from "./LiquidEther"; // ✅ Import your background component
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -16,10 +17,8 @@ export default function Login() {
     setError(null);
 
     try {
-      // ✅ Send login request to backend
       const res = await api.post("/auth/login", { email, password });
 
-      // ✅ Save JWT token + user info in localStorage
       localStorage.setItem("token", res.data.token);
       localStorage.setItem(
         "user",
@@ -27,8 +26,6 @@ export default function Login() {
       );
 
       alert("Login Successful 🎉");
-
-      // ✅ Redirect to home page
       navigate("/");
     } catch (err) {
       console.error(err);
@@ -39,20 +36,48 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative overflow-hidden">
+      {/* 🔹 Liquid Ether Background */}
+      <div
+  style={{
+    position: "fixed",
+    inset: 0,
+    zIndex: 0,
+    pointerEvents: "none",
+    backgroundColor: "black", // 🔹 navy blue base
+  }}
+>
+  <LiquidEther
+     colors={[ '#5227FF', '#FF9FFC', '#B19EEF' ]}
+    mouseForce={20}
+    cursorSize={100}
+    isViscous={false}
+    viscous={30}
+    iterationsViscous={32}
+    iterationsPoisson={32}
+    resolution={0.5}
+    isBounce={false}
+    autoDemo={true}
+    autoSpeed={1}
+    autoIntensity={2.2}
+    takeoverDuration={0.25}
+    autoResumeDelay={3000}
+    autoRampDuration={0.6}
+  />
+</div>
+
+
       <Header />
 
       {/* 🔹 Login Form Section */}
-      <section className="flex flex-1 items-center justify-center bg-brand-mist px-6">
-        <div className="bg-white shadow-luxe rounded-xl2 p-8 w-full max-w-md">
+      <section className="flex flex-1 items-center justify-center relative z-10 px-6">
+        <div className="bg-white/90 backdrop-blur-md shadow-luxe rounded-2xl p-8 w-full max-w-md">
           <h1 className="text-3xl font-bold text-center text-brand-navy mb-6">
             Login
           </h1>
 
-          {/* 🔹 Error Message */}
           {error && <p className="text-red-600 text-center mb-4">{error}</p>}
 
-          {/* 🔹 Form */}
           <form onSubmit={handleLogin} className="space-y-4">
             <input
               type="email"

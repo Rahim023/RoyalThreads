@@ -48,7 +48,7 @@ export default function Discover() {
         </h1>
       </section>
 
-      {/* 🔹 Discover Collection */}
+      {/* 🔹 Discover Collection */} 9i
       <section className="py-16 px-6 md:px-20 bg-brand-mist flex-1">
         <h2 className="text-3xl font-serif font-bold text-brand-navy text-center">
           Stories & Inspirations
