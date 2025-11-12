@@ -1,14 +1,41 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
+import BlurText from "../components/blurtext";
+import ShinyText from "../components/ShinyText";
+
 
 export default function Home() {
-  const categories = [
-    { title: "Women", img: "https://picsum.photos/id/1011/600/800", link: "/women" },
-    { title: "Men", img: "https://picsum.photos/id/1012/600/800", link: "/men" },
-    { title: "Accessories", img: "https://picsum.photos/id/1013/600/800", link: "/accessories" },
-    { title: "Jewelry", img: "https://picsum.photos/id/1014/600/800", link: "/jewelry" },
+  const collections = [
+    {
+      title: "Women",
+      img: "https://picsum.photos/id/1011/800/600",
+      link: "/women",
+      desc: "Discover timeless designs that bring out your elegance and grace.",
+    },
+    {
+      title: "Men",
+      img: "https://picsum.photos/id/1012/800/600",
+      link: "/men",
+      desc: "Classic craftsmanship meets modern sophistication for men of style.",
+    },
+    {
+      title: "Wedding",
+      img: "https://picsum.photos/id/1013/800/600",
+      link: "/wedding",
+      desc: "A curated wedding collection designed to make your special day shine.",
+    },
+    {
+      title: "Discover",
+      img: "https://picsum.photos/id/1014/800/600",
+      link: "/discover",
+      desc: "Explore unique creations and handpicked designs made with passion.",
+    },
   ];
+
+  const handleAnimationComplete = () => {
+    console.log("BlurText animation finished!");
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -16,76 +43,62 @@ export default function Home() {
       <Header />
 
       {/* 🔹 Hero Section */}
-      <section className="py-16 text-center bg-gradient-to-b from-brand-mist to-white">
-        <h1 className="text-4xl md:text-5xl font-serif font-bold text-brand-navy">
-          Discover Your Royal Style
-        </h1>
-        <p className="mt-4 text-lg text-brand-charcoal/80">
-          Curated collections crafted for elegance.
-        </p>
+      <section className="py-16 flex flex-col items-center text-center bg-gradient-to-b from-brand-mist to-white">
+        <BlurText
+          text="Discover Your Royal Style!"
+          delay={150}
+          animateBy="words"
+          direction="top"
+          onAnimationComplete={handleAnimationComplete}
+          className="text-4xl md:text-5xl font-serif font-bold text-brand-navy"
+        />
+
+        <ShinyText
+          text="Curated collections crafted for elegance."
+          disabled={false}
+          speed={3}
+          className="mt-4 text-lg"
+        />
+
         <a
           href="#collections"
-          className="inline-block mt-6 px-8 py-3 rounded-2xl bg-brand-gold text-brand-charcoal font-semibold shadow-luxe hover:bg-brand-navy hover:text-brand-ivory transition"
+          className="inline-block mt-6 px-6 py-3 bg-brand-navy text-white font-semibold rounded-2xl border-2 border-brand-gold hover:bg-brand-gold hover:text-brand-navy transition"
         >
           Shop Now
         </a>
       </section>
 
-      {/* 🔹 Featured Collections */}
-      <section id="collections" className="py-20 bg-white">
-        <h2 className="text-3xl font-serif font-bold text-center text-brand-navy">
-          Featured Collections
-        </h2>
+      {/* 🔹 Four Vertical Collection Blocks */}
+      <section id="collections" className="py-20 bg-white space-y-16 px-6 md:px-16">
+        {collections.map((col, index) => (
+          <Link
+            key={index}
+            to={col.link}
+            className={`flex flex-col md:flex-row ${
+              index % 2 === 1 ? "md:flex-row-reverse" : ""
+            } items-center bg-gray-50 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-transform hover:scale-[1.01] duration-300`}
+          >
+            {/* Image Side */}
+            <img
+              src={col.img}
+              alt={col.title}
+              className="w-full md:w-3/5 h-72 md:h-96 object-cover"
+            />
 
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 px-8">
-          {categories.map((item, i) => (
-            <Link
-              to={item.link}
-              key={i}
-              className="rounded-2xl overflow-hidden shadow-luxe hover:scale-105 transition-transform duration-300 block"
-            >
-              <img
-                src={item.img}
-                alt={item.title}
-                className="w-full h-72 object-cover"
-              />
-              <h3 className="text-xl font-semibold text-center py-4 text-brand-charcoal">
-                {item.title}
-              </h3>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      {/* 🔹 Trending Products */}
-      <section className="py-20 bg-brand-mist">
-        <h2 className="text-3xl font-serif font-bold text-center text-brand-navy">
-          Trending Now
-        </h2>
-
-        <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-8">
-          {[1, 2, 3, 4].map((id) => (
-            <div
-              key={id}
-              className="bg-white rounded-2xl shadow-luxe overflow-hidden hover:scale-105 transition-transform duration-300"
-            >
-              <img
-                src={`https://picsum.photos/id/10${id}/400/400`}
-                alt={`Product ${id}`}
-                className="w-full h-56 object-cover"
-              />
-              <div className="p-4">
-                <h3 className="font-semibold text-lg text-brand-navy">
-                  Product {id}
-                </h3>
-                <p className="text-brand-gold font-bold mt-2">$99.00</p>
-                <button className="mt-4 w-full py-2 rounded-lg bg-brand-navy text-white hover:bg-brand-gold hover:text-brand-charcoal transition">
-                  Add to Cart
-                </button>
-              </div>
+            {/* Text Side */}
+            <div className="w-full md:w-2/5 p-8 text-center md:text-left">
+              <h2 className="text-3xl font-bold text-brand-navy mb-3 font-serif">
+                {col.title} Collection
+              </h2>
+              <p className="text-brand-charcoal/80 mb-5 leading-relaxed">
+                {col.desc}
+              </p>
+              <button className="px-6 py-2 bg-brand-navy text-white rounded-xl hover:bg-brand-gold hover:text-brand-navy transition">
+                Explore Now
+              </button>
             </div>
-          ))}
-        </div>
+          </Link>
+        ))}
       </section>
 
       {/* 🔹 Newsletter Signup */}
@@ -117,8 +130,8 @@ export default function Home() {
             <ul className="space-y-2 text-sm">
               <li>Women</li>
               <li>Men</li>
-              <li>Accessories</li>
-              <li>Jewelry</li>
+              <li>Wedding</li>
+              <li>Discover</li>
             </ul>
           </div>
 

@@ -3,7 +3,11 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 // 🔹 Context Providers
 import { CartProvider } from "./pages/CartContext";
-import { WishlistProvider } from "./pages/WishlistContext"; 
+import { WishlistProvider } from "./pages/WishlistContext";
+
+// 🔹 Styles
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 // 🔹 Pages
 import Home from "./pages/Home";
