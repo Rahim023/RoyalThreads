@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import Header from "../components/Header";
 import { api } from "../services/api";
 import { motion } from "framer-motion";
-import Particles from "./particles";
+import Particles from "../components/particles";
 
 export default function Signup() {
   const navigate = useNavigate();
