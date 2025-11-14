@@ -1,22 +1,31 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 
-const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
+const generateToken = (id) =>
+  jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: "7d" });
 
 export const register = async (req, res) => {
   try {
     const { username, email, password, phone, postalCode, country } = req.body;
 
     const exists = await User.findOne({ email });
-    if (exists) return res.status(400).json({ message: "User already exists" });
+    if (exists)
+      return res.status(400).json({ message: "User already exists" });
 
-    const user = await User.create({ username, email, password, phone, postalCode, country });
+    const user = await User.create({
+      username,
+      email,
+      password,
+      phone,
+      postalCode,
+      country,
+    });
 
     res.status(201).json({
       _id: user._id,
       username: user.username,
       email: user.email,
-      token: generateToken(user._id)
+      token: generateToken(user._id),
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -33,7 +42,7 @@ export const login = async (req, res) => {
         _id: user._id,
         username: user.username,
         email: user.email,
-        token: generateToken(user._id)
+        token: generateToken(user._id),
       });
     } else {
       res.status(401).json({ message: "Invalid credentials" });
@@ -41,4 +50,9 @@ export const login = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+};
+
+// ✅ NEW
+export const getMe = async (req, res) => {
+  res.json(req.user);
 };

@@ -2,7 +2,9 @@ import express from "express";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import cors from "cors";
-
+import productRoutes from "./routes/productRoutes.js";
+import collectionRoutes from "./routes/collectionRoutes.js";
+import newsletterRoutes from "./routes/newsletterRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import wishlistRoutes from "./routes/wishlistRoutes.js";
@@ -16,6 +18,9 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/wishlist", wishlistRoutes);
+app.use("/api/products", productRoutes);
+app.use("/api/collections", collectionRoutes);
+app.use("/api/newsletter", newsletterRoutes);
 
 mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
