@@ -64,7 +64,7 @@ export default function App() {
 
             {/* 🔹 Wishlist */}
             <Route path="/wishlist" element={<Wishlist />} />
-
+    
             {/* 🔹 Authentication */}
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />

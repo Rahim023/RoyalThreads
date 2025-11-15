@@ -51,7 +51,7 @@ export default function Header() {
             className="text-3xl font-serif font-bold text-brand-navy tracking-wide"
             style={{ letterSpacing: "0.04em" }}
           >
-            <span className="text-brand-gold">My</span>Clothing
+            <span className="text-brand-gold">Royal</span>Threads
           </Link>
 
           {/* Right - Icons */}
