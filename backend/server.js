@@ -6,6 +6,8 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import wishlistRoutes from "./routes/wishlistRoutes.js";
+import collectionRoutes from "./routes/collectionRoutes.js";
+import productRoutes from "./routes/productsRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -16,6 +18,8 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/wishlist", wishlistRoutes);
+app.use("/api/collections", collectionRoutes);
+app.use("/api/products", productRoutes);
 
 mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,

@@ -1,76 +1,125 @@
-import React from "react";
-import { motion } from "framer-motion";
+// src/pages/Home.jsx
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import axios from "axios";
+import { motion } from "framer-motion";
 import Header from "../components/Header";
 import BlurText from "../components/blurtext";
 import ShinyText from "../components/ShinyText";
-import ProductCard from "../components/ProductCard"; // <-- fallback
-import CircularGallery from "../components/CircularGallery"; // <-- your gallery component
-
-// Example product data (10+ items)
-const trendingProducts = [
-  { image: "https://picsum.photos/seed/1/400/300", text: "Silk Dress" },
-  { image: "https://picsum.photos/seed/2/400/300", text: "Leather Jacket" },
-  { image: "https://picsum.photos/seed/3/400/300", text: "Wedding Gown" },
-  { image: "https://picsum.photos/seed/4/400/300", text: "Casual Shirt" },
-  { image: "https://picsum.photos/seed/5/400/300", text: "Formal Pants" },
-  { image: "https://picsum.photos/seed/6/400/300", text: "Evening Gown" },
-  { image: "https://picsum.photos/seed/7/400/300", text: "Men's Suit" },
-  { image: "https://picsum.photos/seed/8/400/300", text: "Jumpsuit" },
-  { image: "https://picsum.photos/seed/9/400/300", text: "Blazer" },
-  { image: "https://picsum.photos/seed/10/400/300", text: "Cocktail Dress" },
-  { image: "https://picsum.photos/seed/11/400/300", text: "Summer Dress" },
-];
-
-const otherProducts = [
-  { id: 4, title: "Casual Shirt", img: "https://picsum.photos/id/1018/400/400", price: 70 },
-  { id: 5, title: "Formal Pants", img: "https://picsum.photos/id/1019/400/400", price: 90 },
-  { id: 6, title: "Evening Gown", img: "https://picsum.photos/id/1020/400/400", price: 300 },
-  { id: 7, title: "Men's Suit", img: "https://picsum.photos/id/1021/400/400", price: 400 },
-];
+import ProductCard from "../components/ProductCard";
+import CircularGallery from "../components/CircularGallery";
+import Silk from "../components/Silk";
 
 export default function Home() {
   const navigate = useNavigate();
+  const [trendingProducts, setTrendingProducts] = useState([]);
+  const [otherProducts, setOtherProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleAnimationComplete = () => {
-    console.log("BlurText animation finished!");
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+
+        const trendingRes = await axios.get("http://localhost:5000/api/products/trending");
+        const allRes = await axios.get("http://localhost:5000/api/products");
+
+        const mappedTrending = trendingRes.data.map(p => ({
+          ...p,
+          id: p._id,
+          title: p.title || p.name,
+          img: p.img || p.image,
+        }));
+
+        const mappedAll = allRes.data.map(p => ({
+          ...p,
+          id: p._id,
+          title: p.title || p.name,
+          img: p.img || p.image,
+        }));
+
+        setTrendingProducts(mappedTrending);
+
+        const others = mappedAll.filter(p => !p.trending).slice(0, 8);
+        setOtherProducts(others);
+
+        setLoading(false);
+      } catch (err) {
+        console.error("Error fetching products:", err);
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const scrollToSection = (id) => {
+    const section = document.getElementById(id);
+    if (section) section.scrollIntoView({ behavior: "smooth" });
   };
 
-  return (
-    <div className="min-h-screen flex flex-col px-2">
-      {/* Header */}
-      <Header />
+  /* Sparkle Dots */
+  const Sparkles = () => (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden -z-10">
+      {[...Array(30)].map((_, i) => (
+        <span
+          key={i}
+          className="absolute w-1 h-1 bg-white rounded-full opacity-50 animate-twinkle"
+          style={{
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            animationDelay: `${Math.random() * 3}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
 
-      {/* Hero Section */}
-      <section className="py-44 flex flex-col items-center text-center bg-gradient-to-b from-brand-mist to-white">
+  /* Gradient Orbs */
+  const GradientOrbs = () => (
+    <>
+      <div className="absolute -top-10 -left-10 w-60 h-60 bg-brand-gold/30 blur-3xl rounded-full"></div>
+      <div className="absolute bottom-0 right-0 w-72 h-72 bg-brand-navy/40 blur-[110px] rounded-full"></div>
+    </>
+  );
+
+  return (
+    <div className="min-h-screen flex flex-col px-2 relative overflow-hidden">
+      <Header />
+      <Sparkles />
+
+      {/* HERO SECTION */}
+      <section className="relative flex flex-col items-center justify-center text-center 
+      overflow-hidden min-h-[550px] md:min-h-[750px] ">
+        <div className="absolute inset-0 -z-10">
+          <Silk speed={5} scale={1} color="#f5f0e6" noiseIntensity={0} rotation={0} />
+        </div>
+        <GradientOrbs />
         <BlurText
           text="Discover Your Royal Style!"
           delay={150}
           animateBy="words"
           direction="top"
-          onAnimationComplete={handleAnimationComplete}
-          className="text-4xl md:text-5xl font-serif font-bold text-brand-navy"
+          className="text-4xl md:text-5xl font-serifFancy font-medium text-black"
         />
-
         <ShinyText
           text="Curated collections crafted for elegance."
-          disabled={false}
           speed={3}
-          className="mt-4 text-lg"
+          className="mt-4 text-lg font-sansTrend text-black"
         />
-
-        <a
-          href="#collections"
-          className="inline-block mt-6 px-6 py-3 bg-brand-navy text-white font-semibold rounded-2xl border-2 border-brand-gold hover:bg-brand-gold hover:text-brand-navy transition"
+        <motion.button
+          onClick={() => scrollToSection("trending")}
+          whileHover={{ scale: 1.1 }}
+          className="mt-6 px-7 py-3 bg-brand-gold text-brand-navy font-semibold rounded-2xl border-2 border-brand-navy hover:bg-brand-ivory hover:text-brand-navy transition"
         >
           Shop Now
-        </a>
+        </motion.button>
       </section>
+      <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-brand-gold to-transparent "></div>
 
-      {/* Women & Men Collections */}
-      <section id="collections" className="relative">
-        <div className="relative flex w-full h-[60vh] md:h-[80vh] rounded-lg overflow-hidden shadow-lg">
+      {/* --- COLLECTIONS SECTION 1: Destination Cozy --- */}
+      <section id="collections" className="relative ">
+        <div className="relative flex w-full h-[60vh] md:h-[80vh] overflow-hidden">
           {/* Women */}
           <motion.div
             whileHover={{ scale: 1.03 }}
@@ -85,9 +134,8 @@ export default function Home() {
               className="w-full h-full object-cover"
               alt="Women Fashion"
             />
-
             <p
-              className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-2xl md:text-3xl font-bold text-white drop-shadow-lg cursor-pointer hover:underline"
+              className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-2xl md:text-3xl font-sansTrend text-white drop-shadow-lg cursor-pointer hover:underline"
               onClick={(e) => {
                 e.stopPropagation();
                 navigate("/women");
@@ -111,9 +159,8 @@ export default function Home() {
               className="w-full h-full object-cover"
               alt="Men Fashion"
             />
-
             <p
-              className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-2xl md:text-3xl font-bold text-white drop-shadow-lg cursor-pointer hover:underline"
+              className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-2xl md:text-3xl font-sansTrend text-white drop-shadow-lg cursor-pointer hover:underline"
               onClick={(e) => {
                 e.stopPropagation();
                 navigate("/men");
@@ -130,7 +177,7 @@ export default function Home() {
             transition={{ duration: 1.5 }}
             className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-white drop-shadow-lg font-serif">
+            <h2 className="text-4xl md:text-5xl font-sansTrend text-white drop-shadow-lg ">
               Destination: Cozy
             </h2>
             <p className="mt-2 text-lg md:text-xl text-white drop-shadow-md">
@@ -140,55 +187,144 @@ export default function Home() {
         </div>
       </section>
 
-     <section id="trending" className="relative w-full h-[90vh] bg-gray-50 flex flex-col items-center justify-center px-4 md:px-16">
-  {/* Section title */}
-  <h2 className="text-4xl md:text-5xl font-bold text-brand-navy mb-8 text-center">
-    Trending Now
-  </h2>
+      {/* --- COLLECTIONS SECTION 2: Explore More --- */}
+      <section id="explore-more" className="relative ">
+        <div className="relative flex w-full h-[60vh] md:h-[80vh] overflow-hidden">
+          {/* Signature */}
+          <motion.div
+            whileHover={{ scale: 1.03 }}
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+            className="w-1/2 h-full relative cursor-pointer"
+            onClick={() => navigate("/signature")}
+          >
+            <img
+              src="https://picsum.photos/id/1015/1200/800"
+              className="w-full h-full object-cover"
+              alt="Signature Collection"
+            />
+            <p
+              className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-2xl md:text-3xl font-sansTrend text-white drop-shadow-lg cursor-pointer hover:underline"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate("/signature");
+              }}
+            >
+              Explore Signature
+            </p>
+          </motion.div>
 
-  {/* CircularGallery container */}
-  <div className="w-full h-full rounded-2xl shadow-xl overflow-hidden">
-    <CircularGallery
-      items={trendingProducts}
-      bend={2}             // big dramatic curve
-      borderRadius={0.08}  // slightly rounded images
-      scrollSpeed={3}      // faster scroll for effect
-      font="bold 36px Figtree" // bigger titles on images
-    />
-  </div>
+          {/* Kids */}
+          <motion.div
+            whileHover={{ scale: 1.03 }}
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 1 }}
+            className="w-1/2 h-full relative cursor-pointer"
+            onClick={() => navigate("/kids")}
+          >
+            <img
+              src="https://picsum.photos/id/1016/1200/800"
+              className="w-full h-full object-cover"
+              alt="Kids Collection"
+            />
+            <p
+              className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-2xl md:text-3xl font-sansTrend text-white drop-shadow-lg cursor-pointer hover:underline"
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate("/kids");
+              }}
+            >
+              Explore Kids
+            </p>
+          </motion.div>
 
-  {/* Optional caption below carousel */}
-  <p className="mt-4 text-lg text-center text-brand-charcoal/80">
-    Curated collections you’ll love, all in one place.
-  </p>
-</section>
-
-
-
-      {/* Other Products */}
-      <section id="other-products" className="py-16 bg-white px-2 md:px-16">
-        <h2 className="text-3xl font-bold text-brand-navy mb-8">Other Products</h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {otherProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+          {/* Center Title */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.5 }}
+            className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none"
+          >
+            <h2 className="text-4xl md:text-5xl font-sansTrend text-white drop-shadow-lg ">
+              Explore More
+            </h2>
+            <p className="mt-2 text-lg md:text-xl text-white drop-shadow-md">
+              Discover our exclusive collections
+            </p>
+          </motion.div>
         </div>
+      </section>
+
+      {/* Continue with your Trending, Other Products, Newsletter, Footer */}
+      {/* ... rest of your original code remains unchanged ... */}
+
+
+      <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-brand-gold to-transparent "></div>
+
+      {/* Trending Section */}
+      <section id="trending" className="py-10 bg-gradient-to-b from-brand-navy to-brand-mist md:px-16">
+        <motion.h2
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center text-4xl md:text-5xl font-sansTrend text-brand-mist"
+        >
+          Trending Now
+        </motion.h2>
+
+        <div className="w-full h-full mt-10">
+          {trendingProducts.length > 0 ? (
+            <CircularGallery items={trendingProducts} bend={5} />
+          ) : (
+            <p className="text-center text-white mt-8">No trending products available.</p>
+          )}
+        </div>
+      </section>
+
+      <div className="w-full h-[2px] bg-gradient-to-r from-transparent via-brand-gold to-transparent "></div>
+
+      {/* Other Products Section */}
+      <section id="other-products" className="pb-20 bg-gradient-to-b from-brand-mist to-brand-navy px-2 md:px-16">
+        <motion.h2
+          initial={{ opacity: 0, scale: 0.8 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
+          className="text-center py-12 text-4xl md:text-5xl font-sansTrend text-brand-navy"
+        >
+          Other Products
+        </motion.h2>
+
+        {loading ? (
+          <p className="text-center text-brand-navy">Loading products...</p>
+        ) : otherProducts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {otherProducts.map(product => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-brand-navy">No products available.</p>
+        )}
       </section>
 
       {/* Newsletter */}
       <section className="py-16 text-center bg-white">
-        <h2 className="text-3xl font-serif font-bold text-brand-navy">Stay in the Loop</h2>
-        <p className="mt-2 text-brand-charcoal/80">
+        <h2 className="text-3xl md:text-4xl font-serifFancy text-brand-navy">
+          Stay in the Loop
+        </h2>
+        <p className="mt-2 text-brand-charcoal/80 font-sansTrend">
           Subscribe for updates, offers, and exclusive collections.
         </p>
 
-        <div className="mt-6 flex justify-center">
+        <div className="mt-6 flex justify-center gap-2">
           <input
             type="email"
             placeholder="Enter your email"
-            className="px-4 py-2 rounded-l-lg border border-gray-300 w-72 focus:outline-none focus:ring-2 focus:ring-brand-gold"
+            className="px-4 py-2 rounded-l-lg border border-gray-300 w-72 focus:ring-2 focus:ring-brand-gold"
           />
-          <button className="px-6 py-2 rounded-r-lg bg-brand-gold text-brand-charcoal font-semibold hover:bg-brand-navy hover:text-white transition">
+          <button className="px-6 py-2 rounded-r-lg bg-brand-gold text-brand-charcoal hover:bg-brand-navy hover:text-white transition">
             Subscribe
           </button>
         </div>
@@ -198,8 +334,8 @@ export default function Home() {
       <footer className="bg-brand-navy text-brand-ivory py-10 mt-auto">
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
-            <h4 className="font-bold mb-4">Shop</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="font-serifFancy mb-4">Shop</h4>
+            <ul className="space-y-2 text-sm font-sansTrend">
               <li>Women</li>
               <li>Men</li>
               <li>Wedding</li>
@@ -208,8 +344,8 @@ export default function Home() {
           </div>
 
           <div>
-            <h4 className="font-bold mb-4">Help</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="font-serifFancy mb-4">Help</h4>
+            <ul className="space-y-2 text-sm font-sansTrend">
               <li>Contact Us</li>
               <li>Shipping</li>
               <li>Returns</li>
@@ -218,8 +354,8 @@ export default function Home() {
           </div>
 
           <div>
-            <h4 className="font-bold mb-4">About</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="font-serifFancy mb-4">About</h4>
+            <ul className="space-y-2 text-sm font-sansTrend">
               <li>Our Story</li>
               <li>Careers</li>
               <li>Sustainability</li>
@@ -227,8 +363,8 @@ export default function Home() {
           </div>
 
           <div>
-            <h4 className="font-bold mb-4">Follow Us</h4>
-            <ul className="space-y-2 text-sm">
+            <h4 className="font-serifFancy mb-4">Follow Us</h4>
+            <ul className="space-y-2 text-sm font-sansTrend">
               <li>Instagram</li>
               <li>Facebook</li>
               <li>Twitter</li>
@@ -236,7 +372,7 @@ export default function Home() {
           </div>
         </div>
 
-        <p className="text-center text-sm mt-6">
+        <p className="text-center text-sm mt-6 font-sansTrend">
           © 2025 MyClothing. All rights reserved.
         </p>
       </footer>

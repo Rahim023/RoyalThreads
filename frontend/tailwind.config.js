@@ -9,12 +9,14 @@ export default {
           ivory: "#FFFAF0",
           gold: "#D4AF37",
           purple: "#4B2E83",
-          mist: "#F4F1EA"
+          mist: "#F4F1EA",
+         maroon: "#510000"
         }
       },
       fontFamily: {
-        serif: ['"Playfair Display"', "serif"],
-        sans: ['"Inter"', "system-ui", "sans-serif"]
+             serifFancy: ['Playfair Display', 'serif'],
+             sansTrend: ['Poppins', 'sans-serif'],
+
       },
       boxShadow: {
         luxe: "0 10px 30px rgba(0,0,0,0.15)"

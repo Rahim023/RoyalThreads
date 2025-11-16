@@ -48,8 +48,8 @@ export default function Header() {
           {/* Center - Logo */}
           <Link
             to="/"
-            className="text-3xl font-serif font-bold text-brand-navy tracking-wide"
-            style={{ letterSpacing: "0.04em" }}
+            className="text-4xl font-sansTrend  font-bold text-brand-navy tracking-wide"
+            style={{ letterSpacing: "0.06em" }}
           >
             <span className="text-brand-gold">Royal</span>Threads
           </Link>

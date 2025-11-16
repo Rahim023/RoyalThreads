@@ -1,11 +1,11 @@
-import React from "react";
-import "./StarBorder.css";
+import React from 'react';
+import './starborder.css';
 
 const StarBorder = ({
-  as: Component = "button",
-  className = "",
-  color = "yellow",
-  speed = "5s",
+  as: Component = 'button',
+  className = '',
+  color = 'white',
+  speed = '6s',
   thickness = 1,
   children,
   ...rest
@@ -15,17 +15,23 @@ const StarBorder = ({
       className={`star-border-container ${className}`}
       style={{
         padding: `${thickness}px 0`,
-        ...rest.style,
+        ...rest.style
       }}
       {...rest}
     >
       <div
         className="border-gradient-bottom"
-        style={{ animationDuration: speed }}
+        style={{
+          background: `radial-gradient(circle, ${color}, transparent 10%)`,
+          animationDuration: speed
+        }}
       ></div>
       <div
         className="border-gradient-top"
-        style={{ animationDuration: speed }}
+        style={{
+          background: `radial-gradient(circle, ${color}, transparent 10%)`,
+          animationDuration: speed
+        }}
       ></div>
       <div className="inner-content">{children}</div>
     </Component>

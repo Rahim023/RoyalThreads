@@ -1,6 +1,6 @@
 {
   "dependencies": {
-    "@react-three/fiber": "^9.4.0",
+    "@react-three/fiber": "^8.13.0",
     "autoprefixer": "^10.4.21",
     "bits": "^0.1.1",
     "class-variance-authority": "^0.7.1",
@@ -16,6 +16,6 @@
     "slick-carousel": "^1.8.1",
     "tailwind-variants": "^3.1.1",
     "tailwindcss": "^4.1.16",
-    "three": "^0.181.1"
+    "three": "^0.158.0"
   }
 }

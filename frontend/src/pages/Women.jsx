@@ -1,14 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
-import { useCart } from "./CartContext";   // ✅ Cart Context
-import { useWishlist } from "./WishlistContext"; // ✅ Wishlist Context
+import { useCart } from "./CartContext";
+import { useWishlist } from "./WishlistContext";
 
 export default function Women() {
   const { addToCart } = useCart();
   const { addToWishlist } = useWishlist();
 
-  // ✅ Featured categories (just links)
   const categories = [
     { title: "Casual Wear", image: "/assets/images/Casualwear.jpg", link: "/women/casual" },
     { title: "Evening Gowns", image: "/assets/images/Evening_Gowns.jpg", link: "/women/evening" },
@@ -18,7 +17,6 @@ export default function Women() {
     { title: "Luxury Sarees", image: "/assets/images/Luxury_sarees_c.jpg", link: "/women/sarees" },
   ];
 
-  // ✅ Example products (for homepage display)
   const products = [
     { id: 1, title: "Designer Kurti", price: 79, img: "https://picsum.photos/id/501/400/400" },
     { id: 2, title: "Luxury Saree", price: 129, img: "https://picsum.photos/id/502/400/400" },
@@ -26,11 +24,11 @@ export default function Women() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* 🔹 Global Header */}
+    <div className="min-h-screen flex flex-col bg-white text-brand-charcoal">
+      {/* Header */}
       <Header />
 
-      {/* 🔹 Hero Section */}
+      {/* Hero Section */}
       <section className="py-20 text-center bg-gradient-to-b from-brand-mist to-white">
         <h1 className="text-5xl md:text-6xl font-serif font-bold text-brand-navy mb-6">
           Women’s Royal Collection
@@ -40,7 +38,7 @@ export default function Women() {
         </p>
       </section>
 
-      {/* 🔹 Featured Categories */}
+      {/* Featured Categories */}
       <section className="px-6 md:px-20 py-16">
         <h2 className="text-3xl font-bold text-center text-brand-navy mb-10">
           Explore Our Categories
@@ -70,7 +68,7 @@ export default function Women() {
         </div>
       </section>
 
-      {/* 🔹 Featured Products */}
+      {/* Featured Products */}
       <section className="px-6 md:px-20 py-16 bg-brand-mist">
         <h2 className="text-3xl font-bold text-center text-brand-navy mb-10">
           Featured Products
@@ -86,7 +84,7 @@ export default function Women() {
                 <h3 className="font-semibold text-lg">{item.title}</h3>
                 <p className="text-brand-gold font-bold mt-2">${item.price}.00</p>
 
-                {/* ✅ Buttons */}
+                {/* Buttons */}
                 <div className="flex gap-3 mt-4 justify-center">
                   <button
                     onClick={() => addToCart(item)}
@@ -107,7 +105,7 @@ export default function Women() {
         </div>
       </section>
 
-      {/* 🔹 CTA Section */}
+      {/* CTA Section */}
       <section className="bg-brand-navy text-brand-ivory py-20 text-center">
         <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">
           Royalty Awaits You
@@ -124,7 +122,7 @@ export default function Women() {
         </Link>
       </section>
 
-      {/* 🔹 Footer */}
+      {/* Footer */}
       <footer className="bg-brand-navy text-brand-ivory py-8 text-center">
         <p className="text-sm">© 2025 MyClothing. All rights reserved.</p>
       </footer>

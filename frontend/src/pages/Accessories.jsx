@@ -1,83 +1,71 @@
-import React from "react";
+// src/pages/Accessories.jsx
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import ProductCard from "../components/ProductCard";
 import Header from "../components/Header";
-import { useCart } from "./CartContext";   // ✅ Cart Context
-import { useWishlist } from "./WishlistContext"; // ✅ Wishlist Context
-import { FaHeart } from "react-icons/fa"; // ✅ Heart Icon
 
 export default function Accessories() {
-  const { addToCart } = useCart();
-  const { addToWishlist } = useWishlist();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const products = [
-    { id: 13, title: "Leather Belt", price: 39, img: "https://picsum.photos/id/213/400/400" },
-    { id: 14, title: "Stylish Sunglasses", price: 49, img: "https://picsum.photos/id/214/400/400" },
-    { id: 15, title: "Designer Handbag", price: 129, img: "https://picsum.photos/id/215/400/400" },
-    { id: 16, title: "Silk Scarf", price: 59, img: "https://picsum.photos/id/216/400/400" },
-  ];
+  useEffect(() => {
+    const fetchAccessories = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get("http://localhost:5000/api/products");
+        const allProducts = response.data;
+
+        // Filter only Accessories category
+        const accessories = allProducts.filter(
+          (item) =>
+            item.category?.toLowerCase() === "accessories" ||
+            item.category?.toLowerCase() === "accessory"
+        );
+
+        setProducts(accessories);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching accessories:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchAccessories();
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#0d1b2a]">
+      {/* Header */}
       <Header />
 
-      {/* 🔹 Hero Section */}
-      <section className="py-20 bg-white text-center">
-        <h1 className="text-4xl md:text-5xl font-serif font-bold text-brand-navy">
-          Accessories
+      {/* Page Title */}
+      <section className="text-center py-20 px-4 md:px-16">
+        <h1 className="text-4xl md:text-5xl font-Playfair text-white drop-shadow-lg">
+          Accessories Collection
         </h1>
-        <p className="mt-4 text-gray-600">
-          Complete your look with stylish accessories.
+        <p className="text-gray-300 text-lg mt-2">
+          Explore premium accessories crafted for elegance and everyday style.
         </p>
       </section>
 
-      {/* 🔹 Product Grid */}
-      <section className="py-16 px-6 md:px-20 bg-brand-mist flex-1">
-        <h2 className="text-3xl font-bold text-center text-brand-navy mb-10">
-          Must-Have Accessories
-        </h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {products.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white rounded-xl shadow-luxe overflow-hidden hover:scale-105 transition"
-            >
-              {/* Product Image */}
-              <img
-                src={item.img}
-                alt={item.title}
-                className="w-full h-64 object-cover"
-              />
-
-              {/* Product Info */}
-              <div className="p-4 text-center">
-                <h3 className="font-semibold text-lg">{item.title}</h3>
-                <p className="text-brand-gold font-bold mt-2">${item.price}.00</p>
-
-                {/* ✅ Buttons Row */}
-                <div className="flex justify-center gap-3 mt-4">
-                  {/* 🛒 Add to Cart */}
-                  <button
-                    onClick={() => addToCart(item)}
-                    className="flex-1 py-2 px-4 rounded-lg bg-brand-navy text-white hover:bg-brand-gold hover:text-brand-charcoal transition"
-                  >
-                    Add to Cart
-                  </button>
-
-                  {/* ❤️ Add to Wishlist */}
-                  <button
-                    onClick={() => addToWishlist(item)}
-                    className="px-4 py-2 rounded-lg border border-brand-gold text-brand-navy hover:bg-brand-gold hover:text-white transition"
-                  >
-                    <FaHeart className="text-pink-500" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Product Grid */}
+      <section className="px-4 md:px-16 pb-20 flex-1">
+        {loading ? (
+          <p className="text-gray-300 text-center">Loading accessories...</p>
+        ) : products.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
+            {products.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-300 text-center">
+            No accessories available right now.
+          </p>
+        )}
       </section>
 
-      {/* 🔹 Footer */}
+      {/* Footer */}
       <footer className="bg-brand-navy text-brand-ivory py-8 text-center">
         <p className="text-sm">© 2025 MyClothing. All rights reserved.</p>
       </footer>
